@@ -1,7 +1,7 @@
 package com.gunyoung.infokt.common.controller
 
 import com.gunyoung.infokt.common.code.ContentErrorCode
-import com.gunyoung.infokt.common.code.PersonErrorCode
+import com.gunyoung.infokt.common.code.UserErrorCode
 import com.gunyoung.infokt.common.model.ContentNotFoundException
 import com.gunyoung.infokt.common.model.ErrorMsg
 import com.gunyoung.infokt.common.model.UserNotFoundException
@@ -17,7 +17,7 @@ class ErrorController {
     @ExceptionHandler(UserNotFoundException::class)
     fun handleUserNotFoundException(e: UserNotFoundException) =
         ErrorMsg(
-            PersonErrorCode.PERSON_NOT_FOUNDED_ERROR.code,
+            UserErrorCode.User_NOT_FOUNDED_ERROR.code,
             e.message!!
         )
 
