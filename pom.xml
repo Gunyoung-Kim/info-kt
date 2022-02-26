@@ -5,9 +5,9 @@
 	<packaging>pom</packaging>
 
 	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.5.0</version>
+		<groupId>com.gunyoung.common</groupId>
+		<artifactId>gvc4j</artifactId>
+		<version>0.0.2</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
@@ -22,22 +22,6 @@
 		<module>infokt-api</module>
 		<module>infokt-view</module>
 	</modules>
-
-	<properties>
-		<spring.boot.version>2.5.0</spring.boot.version>
-		<java.version>11</java.version>
-		<kotlin.version>1.6.10</kotlin.version>
-	</properties>
-
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.thymeleaf.extras</groupId>
-				<artifactId>thymeleaf-extras-springsecurity5</artifactId>
-				<version>3.0.4.RELEASE</version>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
 
 	<build>
 		<sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
@@ -70,5 +54,12 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<repositories>
+		<repository>
+			<id>gunyoung-release</id>
+			<url>https://github.com/Gunyoung-Kim/maven-repo/tree/master/repo/releases</url>
+		</repository>
+	</repositories>
 
 </project>
