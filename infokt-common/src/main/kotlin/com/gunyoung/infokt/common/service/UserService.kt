@@ -24,6 +24,7 @@ interface UserService {
     fun findByNameKeywordInPage(pageNumber: Int, keyword: String): Page<UserEntity>
 
     fun delete(userEntity: UserEntity)
+    fun deleteByEmail(email: String)
 
     fun existsByEmail(email: String): Boolean
 
@@ -92,6 +93,8 @@ class UserServiceImpl(
     override fun delete(userEntity: UserEntity) {
         //todo
     }
+
+    override fun deleteByEmail(email: String) = delete(findByEmail(email))
 
     override fun existsByEmail(email: String): Boolean =
         userRepository.existsByEmail(email)
