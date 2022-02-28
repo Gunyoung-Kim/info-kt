@@ -17,7 +17,7 @@ class ErrorController {
     @ExceptionHandler(UserNotFoundException::class)
     fun handleUserNotFoundException(e: UserNotFoundException) =
         ErrorMsg(
-            UserErrorCode.User_NOT_FOUNDED_ERROR.code,
+            UserErrorCode.USER_NOT_FOUNDED_ERROR.code,
             e.message!!
         )
 
