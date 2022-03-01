@@ -3,12 +3,11 @@ package com.gunyoung.infokt.common.model
 import org.mapstruct.Mapper
 import org.mapstruct.Mapping
 import org.mapstruct.Mappings
-import org.springframework.security.core.userdetails.User
 
 @Mapper
 interface UserMapper {
 
-    fun userJoinDtoToEntity(userJoinDto: UserJoinDto): User
+    fun userJoinDtoToEntity(userJoinDto: UserJoinDto): UserEntity
 
     @Mappings(
         Mapping(target = "userId", source = "userEntity.id"),

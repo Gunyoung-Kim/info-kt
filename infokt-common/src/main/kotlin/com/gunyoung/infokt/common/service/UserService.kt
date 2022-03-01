@@ -7,6 +7,7 @@ import com.gunyoung.infokt.common.repository.UserRepository
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 interface UserService {
     fun findById(id: Long): UserEntity
@@ -90,10 +91,13 @@ class UserServiceImpl(
     override fun findByNameKeywordInPage(pageNumber: Int, keyword: String): Page<UserEntity> =
         userRepository.findByNameWithKeyword(keyword, PageRequest.of(pageNumber-1, PAGE_SIZE))
 
+    @Transactional
     override fun delete(userEntity: UserEntity) {
-        //todo
+        userRepository.delete(userEntity)
+        spaceService.delete(userEntity.spaceEntity)
     }
 
+    @Transactional
     override fun deleteByEmail(email: String) = delete(findByEmail(email))
 
     override fun existsByEmail(email: String): Boolean =

@@ -22,6 +22,9 @@
 	</modules>
 
 	<properties>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+
 		<mysql.connector.version>8.0.25</mysql.connector.version>
 		<h2database.version>1.4.200</h2database.version>
 		<mapstruct.version>1.4.2.Final</mapstruct.version>

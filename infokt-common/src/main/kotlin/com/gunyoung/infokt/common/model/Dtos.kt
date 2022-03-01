@@ -37,3 +37,13 @@ data class UpdateLinkDto(
     val linkTag: String,
     val linkURL: String
 )
+
+// Email
+
+data class EmailDto(
+    val senderName: String,
+    val senderMail: String,
+    val receiveMail: String,
+    val subject: String,
+    val message: String
+)
