@@ -12,7 +12,7 @@ interface LinkService {
 
     fun saveAll(linkEntities: Iterable<LinkEntity>): List<LinkEntity>
 
-    fun updateLinksForContent(contentEntity: ContentEntity, updateLinkDtos: Iterable<UpdateLinkDto>): List<LinkEntity>
+    fun updateLinksForContent(contentEntity: ContentEntity, linkUpdateDtos: Iterable<LinkUpdateDto>): List<LinkEntity>
 
     fun delete(linkEntity: LinkEntity)
     fun deleteById(id: Long)
@@ -38,11 +38,11 @@ class LinkServiceImpl(
     @Transactional
     override fun updateLinksForContent(
         contentEntity: ContentEntity,
-        updateLinkDtos: Iterable<UpdateLinkDto>
+        linkUpdateDtos: Iterable<LinkUpdateDto>
     ): List<LinkEntity> {
         val linksForSave = arrayListOf<LinkEntity>()
         val linkDtoMapForModifyingLink =
-            getLinkDTOMapForModifyingLinkAndAddNewContentLinkToSaveLinkList(updateLinkDtos, linksForSave, contentEntity)
+            getLinkDTOMapForModifyingLinkAndAddNewContentLinkToSaveLinkList(linkUpdateDtos, linksForSave, contentEntity)
 
         modifyOrDeleteExistLinks(
             getIdAndLinkMapForExistLinks(contentEntity.linkEntities),
@@ -53,15 +53,15 @@ class LinkServiceImpl(
     }
 
     private fun getLinkDTOMapForModifyingLinkAndAddNewContentLinkToSaveLinkList(
-        updateLinkDtos: Iterable<UpdateLinkDto>,
+        linkUpdateDtos: Iterable<LinkUpdateDto>,
         linksForSave: ArrayList<LinkEntity>,
         contentEntity: ContentEntity
-    ): Map<Long, UpdateLinkDto> {
-        val linkDtoMap = hashMapOf<Long, UpdateLinkDto>()
-        updateLinkDtos.forEach {
+    ): Map<Long, LinkUpdateDto> {
+        val linkDtoMap = hashMapOf<Long, LinkUpdateDto>()
+        linkUpdateDtos.forEach {
             when (it.linkId) {
                 null -> {
-                    val newLinkEntity = linkMapper.updateLinkDtoToEntity(it)
+                    val newLinkEntity = linkMapper.linkUpdateDtoToEntity(it)
                     newLinkEntity.contentEntity = contentEntity
                     linksForSave.add(newLinkEntity)
                 }
@@ -83,23 +83,18 @@ class LinkServiceImpl(
 
     private fun modifyOrDeleteExistLinks(
         idAndLinkMapForExistLinks: Map<Long, LinkEntity>,
-        linkDtoMapForModifyingLink: Map<Long, UpdateLinkDto>,
+        linkDtoMapForModifyingLinkUpdate: Map<Long, LinkUpdateDto>,
         linksForSave: java.util.ArrayList<LinkEntity>
     ) {
         idAndLinkMapForExistLinks.keys.forEach {
             val existLink = idAndLinkMapForExistLinks[it]
-            if (linkDtoMapForModifyingLink.containsKey(it)) {
-                modifyExistLinkByLinkDTO(existLink!!, linkDtoMapForModifyingLink[it]!!)
+            if (linkDtoMapForModifyingLinkUpdate.containsKey(it)) {
+                linkMapper.updateEntityFromLinkUpdateDto(existLink!!, linkDtoMapForModifyingLinkUpdate[it]!!)
                 linksForSave.add(existLink)
             } else {
                 delete(existLink!!)
             }
         }
-    }
-
-    private fun modifyExistLinkByLinkDTO(existLink: LinkEntity, updateLinkDto: UpdateLinkDto) {
-        existLink.tag = updateLinkDto.linkTag
-        existLink.url = updateLinkDto.linkURL
     }
 
     @Transactional

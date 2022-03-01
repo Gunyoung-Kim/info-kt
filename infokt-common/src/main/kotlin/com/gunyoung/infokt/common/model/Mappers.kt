@@ -2,7 +2,20 @@ package com.gunyoung.infokt.common.model
 
 import org.mapstruct.Mapper
 import org.mapstruct.Mapping
+import org.mapstruct.MappingTarget
 import org.mapstruct.Mappings
+import org.mapstruct.factory.Mappers
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
+
+@Configuration
+class MapperBeanConfig {
+    @Bean
+    fun userMapper() : UserMapper = Mappers.getMapper(UserMapper::class.java)
+
+    @Bean
+    fun linkMapper() : LinkMapper = Mappers.getMapper(LinkMapper::class.java)
+}
 
 @Mapper
 interface UserMapper {
@@ -21,8 +34,14 @@ interface UserMapper {
 interface LinkMapper {
 
     @Mappings(
-        Mapping(target = "tag", source = "linkDto.linkTag"),
-        Mapping(target = "url", source = "linkDto.linkURL")
+        Mapping(target = "tag", source = "linkUpdateDto.linkTag"),
+        Mapping(target = "url", source = "linkUpdateDto.linkURL")
     )
-    fun updateLinkDtoToEntity(linkDto: UpdateLinkDto): LinkEntity
+    fun linkUpdateDtoToEntity(linkUpdateDto: LinkUpdateDto): LinkEntity
+
+    @Mappings(
+        Mapping(target = "tag", source = "linkUpdateDto.linkTag"),
+        Mapping(target = "url", source = "linkUpdateDto.linkURL")
+    )
+    fun updateEntityFromLinkUpdateDto(@MappingTarget linkEntity: LinkEntity, linkUpdateDto: LinkUpdateDto)
 }

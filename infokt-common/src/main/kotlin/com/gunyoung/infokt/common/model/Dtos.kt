@@ -32,8 +32,8 @@ data class SimpleUserInfoDto(
 
 // Link
 
-data class UpdateLinkDto(
-    val linkId: Long,
+data class LinkUpdateDto(
+    val linkId: Long? = null,
     val linkTag: String,
     val linkURL: String
 )
