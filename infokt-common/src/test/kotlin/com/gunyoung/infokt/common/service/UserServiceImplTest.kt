@@ -33,12 +33,13 @@ class UserServiceImplUnitTest(
     @BeforeEach
     fun setUp() {
         user = createSampleUserEntity()
+        user.id = 1L
     }
 
     @Test
     fun `ID 를 통해 User 를 찾을 때 존재하지 않는다면 UserNotFoundException 을 던진다`() {
         // given
-        val nonExistId = 1L
+        val nonExistId = 2L
 
         given(userRepository.findById(nonExistId)).willReturn(Optional.empty())
 
@@ -65,7 +66,7 @@ class UserServiceImplUnitTest(
     @Test
     fun `ID를 통해 User 를 Space 와 페치조인하여 찾을 때 존재하지 않는다면 UserNotFoundException 을 던진다`() {
         // given
-        val nonExistId = 1L
+        val nonExistId = 2L
 
         given(userRepository.findByIdWithSpaceInCustom(nonExistId)).willReturn(null)
 

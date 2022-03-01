@@ -89,6 +89,8 @@ class ContentEntity(
     @Column(name = "title")
     @Size(max = 100)
     var title: String = "",
+    @Column(name = "description")
+    var description: String = "",
     @Column(name = "started_at")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     var startedAt: Date? = null,

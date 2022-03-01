@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing
 @Configuration
 @Import(ScanConfigs::class)
 @EnableJpaAuditing
-class CommonConfigs {
+class CommonConfig {
 }
 
 @Configuration
