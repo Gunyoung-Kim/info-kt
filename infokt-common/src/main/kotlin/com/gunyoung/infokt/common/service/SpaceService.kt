@@ -6,6 +6,7 @@ import com.gunyoung.infokt.common.model.SpaceEntity
 import com.gunyoung.infokt.common.model.SpaceNotFoundException
 import com.gunyoung.infokt.common.repository.SpaceRepository
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 interface SpaceService {
     fun findById(id: Long): SpaceEntity
@@ -30,16 +31,19 @@ class SpaceServiceImpl(
     override fun findAll(): List<SpaceEntity> =
         spaceRepository.findAll()
 
-    // todo
+    @Transactional
     override fun delete(spaceEntity: SpaceEntity) {
-
+        spaceEntity.id?.let {
+            contentService.deleteAllBySpaceId(it)
+            spaceRepository.deleteByIdInQuery(it)
+        }
     }
 
     override fun existsById(id: Long): Boolean =
         spaceRepository.existsById(id)
 
-    // todo
-    override fun addContent(space: SpaceEntity, contentEntity: ContentEntity) {
-
+    @Transactional
+    override fun addContent(spaceEntity: SpaceEntity, contentEntity: ContentEntity) {
+        contentEntity.spaceEntity = spaceEntity
     }
 }

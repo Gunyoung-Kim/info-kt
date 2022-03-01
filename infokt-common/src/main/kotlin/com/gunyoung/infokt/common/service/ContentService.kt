@@ -5,6 +5,7 @@ import com.gunyoung.infokt.common.model.ContentEntity
 import com.gunyoung.infokt.common.model.ContentNotFoundException
 import com.gunyoung.infokt.common.repository.ContentRepository
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 interface ContentService {
     fun findById(id: Long): ContentEntity
@@ -14,6 +15,7 @@ interface ContentService {
 
     fun delete(contentEntity: ContentEntity)
     fun deleteById(id: Long)
+    fun deleteAllBySpaceId(spaceId: Long)
 
     fun countAll(): Long
     fun existsById(id: Long): Boolean
@@ -39,16 +41,28 @@ class ContentServiceImpl(
     override fun findAllBySpaceIdWithLinks(spaceId: Long): List<ContentEntity> =
         contentRepository.findAllBySpaceIdWithLinks(spaceId)
 
+    @Transactional
     override fun delete(contentEntity: ContentEntity) {
-        deleteAllLinksContent(contentEntity)
+        deleteAllLinksForContent(contentEntity)
         contentRepository.delete(contentEntity)
     }
 
+    @Transactional
     override fun deleteById(id: Long) = delete(findById(id))
 
-    //todo
-    private fun deleteAllLinksContent(contentEntity: ContentEntity) {
+    @Transactional
+    override fun deleteAllBySpaceId(spaceId: Long) {
+        deleteAllLinksForSpaceContents(contentRepository.findAllBySpaceIdInQuery(spaceId))
+    }
 
+    private fun deleteAllLinksForSpaceContents(contentsForSpace: List<ContentEntity>) {
+        contentsForSpace.forEach {
+            deleteAllLinksForContent(it)
+        }
+    }
+
+    private fun deleteAllLinksForContent(contentEntity: ContentEntity) {
+        contentEntity.id?.let { linkService.deleteAllByContentId(it) }
     }
 
     override fun countAll(): Long = contentRepository.count()

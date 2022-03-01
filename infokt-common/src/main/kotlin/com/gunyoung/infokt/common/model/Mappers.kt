@@ -16,3 +16,13 @@ interface UserMapper {
     )
     fun entityToSimpleUserInfoDto(userEntity: UserEntity): SimpleUserInfoDto
 }
+
+@Mapper
+interface LinkMapper {
+
+    @Mappings(
+        Mapping(target = "tag", source = "linkDto.linkTag"),
+        Mapping(target = "url", source = "linkDto.linkURL")
+    )
+    fun updateLinkDtoToEntity(linkDto: UpdateLinkDto): LinkEntity
+}

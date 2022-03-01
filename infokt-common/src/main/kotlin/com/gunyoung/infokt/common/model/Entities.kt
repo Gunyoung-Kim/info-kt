@@ -6,7 +6,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import org.springframework.format.annotation.DateTimeFormat
 import java.time.OffsetDateTime
 import java.util.*
-import java.util.Collections.emptyList
 import javax.persistence.*
 import javax.validation.constraints.Email
 import javax.validation.constraints.NotEmpty
