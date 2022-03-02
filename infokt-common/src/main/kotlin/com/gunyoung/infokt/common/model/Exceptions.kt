@@ -9,3 +9,6 @@ class ContentNotFoundException(msg: String) : NotFoundException(msg)
 class LinkNotFoundException(msg: String) : NotFoundException(msg)
 
 open class DuplicateException(msg: String) : BusinessLogicException(msg)
+
+open class PermissionDeniedException(msg: String) : BusinessLogicException(msg)
+class NotMyResourceException(msg: String) : PermissionDeniedException(msg)
