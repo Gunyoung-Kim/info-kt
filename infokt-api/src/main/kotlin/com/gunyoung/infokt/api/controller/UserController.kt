@@ -1,11 +1,14 @@
 package com.gunyoung.infokt.api.controller
 
 import com.gunyoung.infokt.common.code.UserErrorCode
+import com.gunyoung.infokt.common.model.EmailDto
 import com.gunyoung.infokt.common.model.SimpleUserInfoDto
 import com.gunyoung.infokt.common.model.UserEmailDuplicationException
 import com.gunyoung.infokt.common.model.UserJoinDto
+import com.gunyoung.infokt.common.service.EmailService
 import com.gunyoung.infokt.common.service.UserService
 import com.gunyoung.infokt.common.util.notReturn
+import org.aspectj.lang.annotation.AfterReturning
 import org.aspectj.lang.annotation.Aspect
 import org.aspectj.lang.annotation.Before
 import org.aspectj.lang.annotation.Pointcut
@@ -43,7 +46,8 @@ class UserRestController(
 @Component
 @Aspect
 class UserRestControllerAspect(
-    val userService: UserService
+    val userService: UserService,
+    val emailService: EmailService
 ) {
 
     @Pointcut("execution(* com.gunyoung.infokt.api.controller.UserRestController.join(..)")
@@ -56,4 +60,15 @@ class UserRestControllerAspect(
             throw UserEmailDuplicationException(UserErrorCode.USER_DUPLICATION_FOUNDED_ERROR.description)
         }
     }
+
+    @AfterReturning("userRestControllerJoinMethod() && args(userJoinDto,..)")
+    fun sendEmailForJoin(userJoinDto: UserJoinDto) = emailService.sendEmail(
+        EmailDto(
+            senderMail = "gun025bba@gmail.com",
+            senderName = "INFO",
+            receiveMail = userJoinDto.email,
+            subject = "INFO 가입을 환영합니다.",
+            message = "INFO 가입을 굉장히 환영합니다."
+        )
+    )
 }
