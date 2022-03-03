@@ -1,10 +1,7 @@
 package com.gunyoung.infokt.common.service
 
 import com.gunyoung.infokt.common.code.UserErrorCode
-import com.gunyoung.infokt.common.model.UserEntity
-import com.gunyoung.infokt.common.model.UserJoinDto
-import com.gunyoung.infokt.common.model.UserMapper
-import com.gunyoung.infokt.common.model.UserNotFoundException
+import com.gunyoung.infokt.common.model.*
 import com.gunyoung.infokt.common.repository.UserRepository
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
@@ -21,6 +18,7 @@ interface UserService {
     fun findByEmailWithSpaceAndContents(email: String): UserEntity
 
     fun findAll(): List<UserEntity>
+    fun findAllSimpleUserInfo(): List<SimpleUserInfoDto>
     fun findAllOrderByCreatedAtDesc(): List<UserEntity>
     fun findAllInPage(pageNumber: Int): Page<UserEntity>
     fun findAllOrderByCreatedAtDescInPage(pageNumber: Int): Page<UserEntity>
@@ -77,6 +75,10 @@ class UserServiceImpl(
     override fun findAll(): List<UserEntity> =
         userRepository.findAll()
 
+    override fun findAllSimpleUserInfo(): List<SimpleUserInfoDto> = userRepository.findAll().map {
+        userMapper.entityToSimpleUserInfoDto(it)
+    }
+
     override fun findAllOrderByCreatedAtDesc(): List<UserEntity> =
         userRepository.findAllByOrderByCreatedAtDesc()
 
@@ -98,6 +100,7 @@ class UserServiceImpl(
     override fun findByNameKeywordInPage(pageNumber: Int, keyword: String): Page<UserEntity> =
         userRepository.findByNameWithKeyword(keyword, PageRequest.of(pageNumber-1, PAGE_SIZE))
 
+    @Transactional
     override fun createNewUser(userJoinDto: UserJoinDto): UserEntity =
         userMapper.userJoinDtoToEntity(userJoinDto)
             .encodePassword()
