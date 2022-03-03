@@ -58,15 +58,15 @@ class LinkServiceImpl(
         contentEntity: ContentEntity
     ): Map<Long, LinkUpdateDto> {
         val linkDtoMap = hashMapOf<Long, LinkUpdateDto>()
-        linkUpdateDtos.forEach {
-            when (it.linkId) {
+        linkUpdateDtos.forEach { linkUpdateDto ->
+            when (linkUpdateDto.linkId) {
                 null -> {
-                    val newLinkEntity = linkMapper.linkUpdateDtoToEntity(it)
+                    val newLinkEntity = linkMapper.linkUpdateDtoToEntity(linkUpdateDto)
                     newLinkEntity.contentEntity = contentEntity
                     linksForSave.add(newLinkEntity)
                 }
                 else -> {
-                    linkDtoMap[it.linkId] = it
+                    linkDtoMap[linkUpdateDto.linkId] = linkUpdateDto
                 }
             }
         }
