@@ -1,9 +1,11 @@
 package com.gunyoung.infokt.common.service
 
 import com.gunyoung.infokt.common.model.UserEntity
+import com.gunyoung.infokt.common.model.UserMapper
 import com.gunyoung.infokt.common.model.UserNotFoundException
 import com.gunyoung.infokt.common.repository.UserRepository
 import com.gunyoung.infokt.common.util.createSampleUserEntity
+import com.gunyoung.infokt.common.util.createSampleUserJoinDto
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -17,6 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
+import org.springframework.security.crypto.password.PasswordEncoder
 import java.util.*
 
 @ExtendWith(MockitoExtension::class)
@@ -25,6 +28,10 @@ class UserServiceImplUnitTest(
     val userRepository: UserRepository,
     @Mock
     val spaceService: SpaceService,
+    @Mock
+    val userMapper: UserMapper,
+    @Mock
+    val passwordEncoder: PasswordEncoder,
     @InjectMocks
     val userService: UserServiceImpl
 ) {
@@ -285,6 +292,26 @@ class UserServiceImplUnitTest(
 
         // then
         assertEquals(users, result.toList())
+    }
+
+    @Test
+    fun `User 를 생성한다`() {
+        // given
+        val userEmail = "test@test.com"
+        val userJoinDto = createSampleUserJoinDto(userEmail)
+        val newUser = createSampleUserEntity(userEmail)
+        val encodedPassword = "asgd6a78afghasf"
+
+        given(userMapper.userJoinDtoToEntity(userJoinDto)).willReturn(newUser)
+        given(passwordEncoder.encode(userJoinDto.password)).willReturn(encodedPassword)
+
+        // when
+        val result = userService.createNewUser(userJoinDto)
+
+        // then
+        assertEquals(newUser, result)
+        assertEquals(encodedPassword, result.password)
+        then(userRepository).should(times(1)).save(result)
     }
 
     @Test

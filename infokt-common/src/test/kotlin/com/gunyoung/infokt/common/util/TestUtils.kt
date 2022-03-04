@@ -1,13 +1,12 @@
 package com.gunyoung.infokt.common.util
 
-import com.gunyoung.infokt.common.model.ContentEntity
-import com.gunyoung.infokt.common.model.RoleType
-import com.gunyoung.infokt.common.model.SpaceEntity
-import com.gunyoung.infokt.common.model.UserEntity
+import com.gunyoung.infokt.common.model.*
 
 const val DEFAULT_USER_EMAIL = "test@test.com"
 
 fun createSampleUserEntity() : UserEntity = createSampleUserEntity(DEFAULT_USER_EMAIL, RoleType.USER)
+
+fun createSampleUserEntity(email: String) = createSampleUserEntity(email, RoleType.USER)
 
 fun createSampleUserEntity(roleType: RoleType) = createSampleUserEntity(DEFAULT_USER_EMAIL, roleType)
 
@@ -18,6 +17,16 @@ fun createSampleUserEntity(email: String, roleType: RoleType) : UserEntity =
         firstName = "스트",
         lastName = "테",
         role = roleType
+    )
+
+fun createSampleUserJoinDto() : UserJoinDto = createSampleUserJoinDto(DEFAULT_USER_EMAIL)
+
+fun createSampleUserJoinDto(email: String) : UserJoinDto =
+    UserJoinDto(
+        email = email,
+        password = "abcd1234!",
+        firstName = "스트",
+        lastName = "테"
     )
 
 fun createSampleSpaceEntity() : SpaceEntity =

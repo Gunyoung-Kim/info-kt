@@ -23,7 +23,7 @@ class EmailServiceImpl(
     }
 
     @Async
-    override fun sendEmail(email: EmailDto) {
+    override fun sendEmail(email: EmailDto) =
         try {
             mailSender.createMimeMessage().apply {
                 addRecipient(Message.RecipientType.TO, InternetAddress(email.receiveMail))
@@ -36,5 +36,5 @@ class EmailServiceImpl(
         } catch (e: Exception) {
             log.debug("Exception occurred while sending email", e)
         }
-    }
+
 }
