@@ -13,3 +13,6 @@ class UserEmailDuplicationException(msg: String) : DuplicateException(msg)
 
 open class PermissionDeniedException(msg: String) : BusinessLogicException(msg)
 class NotMyResourceException(msg: String) : PermissionDeniedException(msg)
+
+open class BadRequestException(msg: String) : BusinessLogicException(msg)
+class ContentNumLimitExceedException(msg: String) : BadRequestException(msg)

@@ -1,15 +1,15 @@
 package com.gunyoung.infokt.api.controller
 
 import com.gunyoung.infokt.common.code.UserErrorCode
+import com.gunyoung.infokt.common.model.ContentDto
 import com.gunyoung.infokt.common.model.ContentEntity
 import com.gunyoung.infokt.common.model.NotMyResourceException
 import com.gunyoung.infokt.common.service.ContentService
 import com.gunyoung.infokt.common.service.LinkService
 import com.gunyoung.infokt.common.service.UserService
 import com.gunyoung.infokt.common.util.getSessionUserEmail
-import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
+import javax.validation.Valid
 
 @RestController
 class ContentRestController(
@@ -17,6 +17,14 @@ class ContentRestController(
     val userService: UserService,
     val linkService: LinkService
 ) {
+
+    @PostMapping("/contents/{userId}")
+    fun createContent(
+        @PathVariable userId: Long,
+        @Valid @ModelAttribute contentDto: ContentDto
+    ) {
+
+    }
 
     @DeleteMapping("/contents/{id}")
     fun deleteContent(

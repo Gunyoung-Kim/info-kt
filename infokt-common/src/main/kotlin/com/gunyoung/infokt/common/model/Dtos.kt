@@ -1,5 +1,6 @@
 package com.gunyoung.infokt.common.model
 
+import java.util.*
 import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.Size
 
@@ -29,6 +30,21 @@ data class SimpleUserInfoDto(
     val userName: String,
     val userEmail: String
 )
+
+// Content
+
+data class ContentDto(
+    val hostId: Long,
+    val title: String,
+    val description: String,
+    val contributors: String,
+    val skillStacks: String,
+    val startedAt: Date,
+    val endAt: Date,
+    val contents: String,
+    val links: List<LinkUpdateDto> = emptyList()
+)
+
 
 // Link
 
