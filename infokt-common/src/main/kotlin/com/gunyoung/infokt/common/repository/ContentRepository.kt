@@ -14,7 +14,7 @@ interface ContentRepository : JpaRepository<ContentEntity, Long> {
                 + "INNER JOIN FETCH s.userEntity u "
                 + "WHERE c.id = :contentId"
     )
-    fun findByIdWithSpaceAndPerson(@Param("contentId") contentId: Long): ContentEntity?
+    fun findByIdWithSpaceAndUser(@Param("contentId") contentId: Long): ContentEntity?
 
     @Query(
         "SELECT c FROM ContentEntity c "

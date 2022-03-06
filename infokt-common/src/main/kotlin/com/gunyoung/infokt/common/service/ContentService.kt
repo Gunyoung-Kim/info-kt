@@ -31,7 +31,7 @@ class ContentServiceImpl(
             .orElseThrow { ContentNotFoundException(ContentErrorCode.CONTENT_NOT_FOUNDED_ERROR.description) }
 
     override fun findByIdWithSpaceAndUser(id: Long): ContentEntity =
-        contentRepository.findByIdWithSpaceAndPerson(id)
+        contentRepository.findByIdWithSpaceAndUser(id)
             ?: throw ContentNotFoundException(ContentErrorCode.CONTENT_NOT_FOUNDED_ERROR.description)
 
     override fun findByIdWithLinks(id: Long): ContentEntity =
@@ -53,6 +53,7 @@ class ContentServiceImpl(
     @Transactional
     override fun deleteAllBySpaceId(spaceId: Long) {
         deleteAllLinksForSpaceContents(contentRepository.findAllBySpaceIdInQuery(spaceId))
+        contentRepository.deleteAllBySpaceIdInQuery(spaceId)
     }
 
     private fun deleteAllLinksForSpaceContents(contentsForSpace: List<ContentEntity>) {
