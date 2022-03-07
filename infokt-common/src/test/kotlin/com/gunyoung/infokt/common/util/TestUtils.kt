@@ -1,6 +1,7 @@
 package com.gunyoung.infokt.common.util
 
 import com.gunyoung.infokt.common.model.*
+import org.mockito.Mockito
 
 const val DEFAULT_USER_EMAIL = "test@test.com"
 
@@ -64,3 +65,5 @@ fun createSampleLinkUpdateDto(linkId: Long) : LinkUpdateDto =
         linkTag = "updateLink",
         linkURL = "https://update.com"
     )
+
+inline fun <reified T> any(type: Class<T>): T = Mockito.any(type)

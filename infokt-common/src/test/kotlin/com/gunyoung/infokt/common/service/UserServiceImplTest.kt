@@ -1,5 +1,6 @@
 package com.gunyoung.infokt.common.service
 
+import com.gunyoung.infokt.common.TestConfig
 import com.gunyoung.infokt.common.model.UserEntity
 import com.gunyoung.infokt.common.model.UserMapper
 import com.gunyoung.infokt.common.model.UserNotFoundException
@@ -11,12 +12,12 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.ArgumentMatchers.any
 import org.mockito.BDDMockito.*
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.context.annotation.Import
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -24,17 +25,18 @@ import java.util.*
 
 @ExtendWith(MockitoExtension::class)
 class UserServiceImplUnitTest(
-    @Mock
-    val userRepository: UserRepository,
-    @Mock
-    val spaceService: SpaceService,
-    @Mock
-    val userMapper: UserMapper,
-    @Mock
-    val passwordEncoder: PasswordEncoder,
-    @InjectMocks
-    val userService: UserServiceImpl
 ) {
+    @Mock
+    lateinit var userRepository: UserRepository
+    @Mock
+    lateinit var spaceService: SpaceService
+    @Mock
+    lateinit var userMapper: UserMapper
+    @Mock
+    lateinit var passwordEncoder: PasswordEncoder
+    @InjectMocks
+    lateinit var userService: UserServiceImpl
+
     lateinit var user: UserEntity
 
     @BeforeEach
@@ -61,7 +63,7 @@ class UserServiceImplUnitTest(
         // given
         val userId = user.id!!
 
-        given(userRepository.findByIdWithSpaceInCustom(userId)).willReturn(user)
+        given(userRepository.findById(userId)).willReturn(Optional.of(user))
 
         // when
         val result = userService.findById(userId)
@@ -115,7 +117,7 @@ class UserServiceImplUnitTest(
         // given
         val userEmail = user.email!!
 
-        given(userRepository.findByEmailWithSpaceInCustom(userEmail)).willReturn(user)
+        given(userRepository.findByEmail(userEmail)).willReturn(user)
 
         // when
         val result = userService.findByEmail(userEmail)
@@ -285,7 +287,7 @@ class UserServiceImplUnitTest(
         val keyword = user.firstName!!
         val pageNumber = 1
 
-        given(userRepository.findByNameWithKeyword(any(String::class.java), any(PageRequest::class.java))).willReturn(PageImpl(users))
+        given(userRepository.findByNameWithKeyword(anyString(), any(PageRequest::class.java))).willReturn(PageImpl(users))
 
         // when
         val result = userService.findByNameKeywordInPage(pageNumber, keyword)
@@ -304,6 +306,7 @@ class UserServiceImplUnitTest(
 
         given(userMapper.userJoinDtoToEntity(userJoinDto)).willReturn(newUser)
         given(passwordEncoder.encode(userJoinDto.password)).willReturn(encodedPassword)
+        given(userRepository.save(newUser)).willReturn(newUser)
 
         // when
         val result = userService.createNewUser(userJoinDto)
@@ -311,7 +314,6 @@ class UserServiceImplUnitTest(
         // then
         assertEquals(newUser, result)
         assertEquals(encodedPassword, result.password)
-        then(userRepository).should(times(1)).save(result)
     }
 
     @Test
@@ -417,6 +419,11 @@ class UserServiceImplUnitTest(
 }
 
 @SpringBootTest
+@Import(TestConfig::class)
 class UserServiceImplTest(
 ) {
+    @Test
+    fun contextLoad() {
+
+    }
 }
