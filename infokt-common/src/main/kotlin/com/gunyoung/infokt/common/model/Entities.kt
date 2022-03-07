@@ -76,7 +76,7 @@ class SpaceEntity(
     @OneToOne(mappedBy = "spaceEntity", fetch = FetchType.LAZY)
     var userEntity: UserEntity? = null,
     @OneToMany(mappedBy = "spaceEntity")
-    var contentEntities: List<ContentEntity> = emptyList()
+    var contentEntities: List<ContentEntity> = mutableListOf()
 )
 
 @Entity
@@ -107,7 +107,7 @@ class ContentEntity(
     @JoinColumn(name = "space_id")
     var spaceEntity: SpaceEntity? = null,
     @OneToMany(mappedBy = "contentEntity", orphanRemoval = true)
-    var linkEntities: List<LinkEntity> = emptyList()
+    var linkEntities: List<LinkEntity> = mutableListOf()
 )
 
 @Entity

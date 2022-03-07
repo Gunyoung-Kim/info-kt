@@ -45,3 +45,22 @@ fun createSampleContentEntity(title: String) : ContentEntity =
         contributors = "contributors",
         contents = "contents"
     )
+
+fun createSampleLinkEntity() : LinkEntity =
+    LinkEntity(
+        tag = "tag",
+        url = "http://localhost"
+    )
+
+fun createSampleLinkUpdateDto() : LinkUpdateDto =
+    LinkUpdateDto(
+        linkTag = "updateLink",
+        linkURL = "https://update.com"
+    )
+
+fun createSampleLinkUpdateDto(linkId: Long) : LinkUpdateDto =
+    LinkUpdateDto(
+        linkId = linkId,
+        linkTag = "updateLink",
+        linkURL = "https://update.com"
+    )
