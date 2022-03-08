@@ -17,14 +17,15 @@ import org.mockito.junit.jupiter.MockitoExtension
 import java.util.*
 
 @ExtendWith(MockitoExtension::class)
-class SpaceServiceImplUnitTest(
+class SpaceServiceImplUnitTest {
+
     @Mock
-    val spaceRepository: SpaceRepository,
+    lateinit var spaceRepository: SpaceRepository
     @Mock
-    val contentService: ContentService,
+    lateinit var contentService: ContentService
     @InjectMocks
-    val spaceService: SpaceServiceImpl
-) {
+    lateinit var spaceService: SpaceServiceImpl
+
     lateinit var space: SpaceEntity
 
     @BeforeEach
