@@ -16,14 +16,14 @@ import org.mockito.junit.jupiter.MockitoExtension
 import java.util.*
 
 @ExtendWith(MockitoExtension::class)
-class ContentServiceImplUnitTest(
+class ContentServiceImplUnitTest {
+
     @Mock
-    val contentRepository: ContentRepository,
+    lateinit var contentRepository: ContentRepository
     @Mock
-    val linkService: LinkService,
+    lateinit var linkService: LinkService
     @InjectMocks
-    val contentService: ContentServiceImpl
-) {
+    lateinit var contentService: ContentServiceImpl
 
     lateinit var content: ContentEntity
 
@@ -42,7 +42,7 @@ class ContentServiceImplUnitTest(
 
         // when, then
         assertThrows<ContentNotFoundException> {
-            contentService.findAllBySpaceIdWithLinks(nonExistId)
+            contentService.findById(nonExistId)
         }
     }
 
