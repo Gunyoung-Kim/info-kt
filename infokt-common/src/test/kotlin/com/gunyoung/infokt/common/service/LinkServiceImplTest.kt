@@ -20,14 +20,14 @@ import org.mockito.junit.jupiter.MockitoExtension
 import java.util.*
 
 @ExtendWith(MockitoExtension::class)
-class LinkServiceImplUnitTest(
+class LinkServiceImplUnitTest {
+
     @Mock
-    val linkRepository: LinkRepository,
+    lateinit var linkRepository: LinkRepository
     @Mock
-    val linkMapper: LinkMapper,
+    lateinit var linkMapper: LinkMapper
     @InjectMocks
-    val linkService: LinkServiceImpl
-) {
+    lateinit var linkService: LinkServiceImpl
 
     lateinit var link: LinkEntity
 
@@ -98,12 +98,15 @@ class LinkServiceImplUnitTest(
         // given
         val content = createSampleContentEntity().clearLinks()
         val linkUpdateDto = createSampleLinkUpdateDto()
+        val newLinkEntity = createSampleLinkEntity();
+
+        given(linkMapper.linkUpdateDtoToEntity(linkUpdateDto)).willReturn(newLinkEntity);
 
         // when
         linkService.updateLinksForContent(content, listOf(linkUpdateDto))
 
         // then
-        then(linkMapper).should(times(1)).linkUpdateDtoToEntity(linkUpdateDto)
+        assertEquals(content, newLinkEntity.contentEntity)
     }
 
     @Test
