@@ -1,17 +1,18 @@
 package com.gunyoung.infokt.common.util
 
 import com.gunyoung.infokt.common.model.*
+import com.gunyoung.infokt.common.repository.UserRepository
 import org.mockito.Mockito
 
 const val DEFAULT_USER_EMAIL = "test@test.com"
 
-fun createSampleUserEntity() : UserEntity = createSampleUserEntity(DEFAULT_USER_EMAIL, RoleType.USER)
+fun createSampleUserEntity(): UserEntity = createSampleUserEntity(DEFAULT_USER_EMAIL, RoleType.USER)
 
 fun createSampleUserEntity(email: String) = createSampleUserEntity(email, RoleType.USER)
 
 fun createSampleUserEntity(roleType: RoleType) = createSampleUserEntity(DEFAULT_USER_EMAIL, roleType)
 
-fun createSampleUserEntity(email: String, roleType: RoleType) : UserEntity =
+fun createSampleUserEntity(email: String, roleType: RoleType): UserEntity =
     UserEntity(
         email = email,
         password = "abcd1234!",
@@ -20,9 +21,9 @@ fun createSampleUserEntity(email: String, roleType: RoleType) : UserEntity =
         role = roleType
     )
 
-fun createSampleUserJoinDto() : UserJoinDto = createSampleUserJoinDto(DEFAULT_USER_EMAIL)
+fun createSampleUserJoinDto(): UserJoinDto = createSampleUserJoinDto(DEFAULT_USER_EMAIL)
 
-fun createSampleUserJoinDto(email: String) : UserJoinDto =
+fun createSampleUserJoinDto(email: String): UserJoinDto =
     UserJoinDto(
         email = email,
         password = "abcd1234!",
@@ -30,16 +31,19 @@ fun createSampleUserJoinDto(email: String) : UserJoinDto =
         lastName = "테"
     )
 
-fun createSampleSpaceEntity() : SpaceEntity =
+fun getNonExistIdForUserEntity(userRepository: UserRepository): Long = userRepository.findAll().maxOf { it.id!! } + 1
+
+
+fun createSampleSpaceEntity(): SpaceEntity =
     SpaceEntity(
         description = "description"
     )
 
 const val DEFAULT_CONTENT_TITLE = "title"
 
-fun createSampleContentEntity() : ContentEntity = createSampleContentEntity(DEFAULT_CONTENT_TITLE)
+fun createSampleContentEntity(): ContentEntity = createSampleContentEntity(DEFAULT_CONTENT_TITLE)
 
-fun createSampleContentEntity(title: String) : ContentEntity =
+fun createSampleContentEntity(title: String): ContentEntity =
     ContentEntity(
         title = title,
         description = "description",
@@ -47,19 +51,19 @@ fun createSampleContentEntity(title: String) : ContentEntity =
         contents = "contents"
     )
 
-fun createSampleLinkEntity() : LinkEntity =
+fun createSampleLinkEntity(): LinkEntity =
     LinkEntity(
         tag = "tag",
         url = "http://localhost"
     )
 
-fun createSampleLinkUpdateDto() : LinkUpdateDto =
+fun createSampleLinkUpdateDto(): LinkUpdateDto =
     LinkUpdateDto(
         linkTag = "updateLink",
         linkURL = "https://update.com"
     )
 
-fun createSampleLinkUpdateDto(linkId: Long) : LinkUpdateDto =
+fun createSampleLinkUpdateDto(linkId: Long): LinkUpdateDto =
     LinkUpdateDto(
         linkId = linkId,
         linkTag = "updateLink",

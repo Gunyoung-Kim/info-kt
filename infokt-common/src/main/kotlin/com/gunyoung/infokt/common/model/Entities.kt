@@ -4,7 +4,7 @@ import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import org.springframework.format.annotation.DateTimeFormat
-import java.time.OffsetDateTime
+import java.time.LocalDateTime
 import java.util.*
 import javax.persistence.*
 import javax.validation.constraints.Email
@@ -18,9 +18,9 @@ abstract class BaseEntity(
     var version: Int? = null,
     @CreatedDate
     @Column(updatable = false)
-    var createdAt: OffsetDateTime? = null,
+    var createdAt: LocalDateTime? = null,
     @LastModifiedDate
-    var modifiedAt: OffsetDateTime? = null
+    var modifiedAt: LocalDateTime? = null
 )
 
 @Entity
