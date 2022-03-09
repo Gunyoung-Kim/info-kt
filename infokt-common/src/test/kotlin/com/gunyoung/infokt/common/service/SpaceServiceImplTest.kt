@@ -6,8 +6,10 @@ import com.gunyoung.infokt.common.model.SpaceEntity
 import com.gunyoung.infokt.common.model.SpaceNotFoundException
 import com.gunyoung.infokt.common.repository.ContentRepository
 import com.gunyoung.infokt.common.repository.SpaceRepository
+import com.gunyoung.infokt.common.repository.UserRepository
 import com.gunyoung.infokt.common.util.createSampleContentEntity
 import com.gunyoung.infokt.common.util.createSampleSpaceEntity
+import com.gunyoung.infokt.common.util.createSampleUserEntity
 import com.gunyoung.infokt.common.util.getNonExistIdForSpaceEntity
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.*
@@ -142,10 +144,13 @@ class SpaceServiceImplUnitTest {
     @Test
     fun `Space에 Content 추가할때 Content의 Space 에 등록이 되어있는지 확인한다`() {
         // given
+        val userId = 1L
         val contentEntity = createSampleContentEntity()
 
+        given(spaceRepository.findByUserIdWithContentEntities(userId)).willReturn(space)
+
         // when
-        spaceService.addContent(space, contentEntity)
+        spaceService.addContentByUserId(userId, contentEntity)
 
         // then
         assertEquals(space, contentEntity.spaceEntity)
@@ -162,6 +167,8 @@ class SpaceServiceImplTest {
     lateinit var contentService: ContentService
     @Autowired
     lateinit var contentRepository: ContentRepository
+    @Autowired
+    lateinit var userRepository: UserRepository
     @Autowired
     lateinit var spaceService: SpaceService
 
@@ -237,15 +244,17 @@ class SpaceServiceImplTest {
     }
 
     @Test
-    fun `Space 에 Content 를 추가할 때 최대 갯수를 넘는다면 ContentNumLimitExceedException 를 던진다`() {
+    fun `Space 에 User ID 로 찾아 Content 를 추가할 때 최대 갯수를 넘는다면 ContentNumLimitExceedException 를 던진다`() {
         // given
-        addContentUntilMaxNumOfContent(space)
+        val newSpace = createSampleSpaceEntity()
+        val userId = setUserForSpaceAndGetUserId(newSpace)
+        addContentUntilMaxNumOfContent(newSpace)
 
         val beforeNumOfContent = contentRepository.count()
 
         // when, then
         assertThrows<ContentNumLimitExceedException> {
-            spaceService.addContent(space, createSampleContentEntity())
+            spaceService.addContentByUserId(userId, createSampleContentEntity())
         }
 
         assertEquals(beforeNumOfContent, contentRepository.count())
@@ -261,16 +270,22 @@ class SpaceServiceImplTest {
     }
 
     @Test
-    fun `Space 에 Content 를 추가한다`() {
+    fun `Space 에 User ID 로 찾아 Content 를 추가한다`() {
         // given
+        val userId = setUserForSpaceAndGetUserId(createSampleSpaceEntity())
         val newContentForSpace = createSampleContentEntity()
 
         val beforeNumOfContent = contentRepository.count()
 
         // when
-        spaceService.addContent(space, newContentForSpace)
+        spaceService.addContentByUserId(userId, newContentForSpace)
 
         // then
         assertEquals(beforeNumOfContent + 1, contentRepository.count())
+    }
+
+    private fun setUserForSpaceAndGetUserId(space: SpaceEntity): Long = createSampleUserEntity("newUser@test.com").let {
+        it.spaceEntity = space
+        userRepository.save(it).id!!
     }
 }

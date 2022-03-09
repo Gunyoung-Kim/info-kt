@@ -17,6 +17,14 @@ interface SpaceRepository : JpaRepository<SpaceEntity, Long> {
     )
     fun findByPersonIdInQuery(@Param("userId") userId: Long): SpaceEntity?
 
+    @Query(
+        "SELECT s FROM SpaceEntity s " +
+                "INNER JOIN s.userEntity u " +
+                "LEFT JOIN FETCH s.contentEntities e " +
+                "WHERE u.id = :userId"
+    )
+    fun findByUserIdWithContentEntities(@Param("userId") userId: Long): SpaceEntity?
+
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query(
         "DELETE FROM SpaceEntity s "

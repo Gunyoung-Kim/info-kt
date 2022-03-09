@@ -18,7 +18,7 @@ interface SpaceService {
 
     fun existsById(id: Long): Boolean
 
-    fun addContent(spaceEntity: SpaceEntity, contentEntity: ContentEntity)
+    fun addContentByUserId(userId: Long, contentEntity: ContentEntity)
 }
 
 @Service
@@ -50,9 +50,11 @@ class SpaceServiceImpl(
         spaceRepository.existsById(id)
 
     @Transactional
-    override fun addContent(spaceEntity: SpaceEntity, contentEntity: ContentEntity) {
-        contentEntity.spaceEntity = spaceEntity.checkNumOfContent()
-        contentService.save(contentEntity)
+    override fun addContentByUserId(userId: Long, contentEntity: ContentEntity) {
+        spaceRepository.findByUserIdWithContentEntities(userId)?.let {
+            contentEntity.spaceEntity = it.checkNumOfContent()
+            contentService.save(contentEntity)
+        } ?: throw SpaceNotFoundException(SpaceErrorCode.SPACE_NOT_FOUND_ERROR.description)
     }
 
     private fun SpaceEntity.checkNumOfContent() : SpaceEntity = apply {
