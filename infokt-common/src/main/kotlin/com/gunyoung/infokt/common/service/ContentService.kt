@@ -17,7 +17,10 @@ interface ContentService {
     fun deleteById(id: Long)
     fun deleteAllBySpaceId(spaceId: Long)
 
+    fun save(contentEntity: ContentEntity): ContentEntity
+
     fun countAll(): Long
+    fun countAllBySpaceId(spaceId: Long): Long
     fun existsById(id: Long): Boolean
 }
 
@@ -56,6 +59,9 @@ class ContentServiceImpl(
         contentRepository.deleteAllBySpaceIdInQuery(spaceId)
     }
 
+    @Transactional
+    override fun save(contentEntity: ContentEntity): ContentEntity = contentRepository.save(contentEntity)
+
     private fun deleteAllLinksForSpaceContents(contentsForSpace: List<ContentEntity>) {
         contentsForSpace.forEach {
             deleteAllLinksForContent(it)
@@ -67,6 +73,8 @@ class ContentServiceImpl(
     }
 
     override fun countAll(): Long = contentRepository.count()
+
+    override fun countAllBySpaceId(spaceId: Long): Long = contentRepository.count()
 
     override fun existsById(id: Long): Boolean = contentRepository.existsById(id)
 }

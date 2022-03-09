@@ -1,6 +1,7 @@
 package com.gunyoung.infokt.common.util
 
 import com.gunyoung.infokt.common.model.*
+import com.gunyoung.infokt.common.repository.SpaceRepository
 import com.gunyoung.infokt.common.repository.UserRepository
 import org.mockito.Mockito
 
@@ -33,11 +34,12 @@ fun createSampleUserJoinDto(email: String): UserJoinDto =
 
 fun getNonExistIdForUserEntity(userRepository: UserRepository): Long = userRepository.findAll().maxOf { it.id!! } + 1
 
-
 fun createSampleSpaceEntity(): SpaceEntity =
     SpaceEntity(
         description = "description"
     )
+
+fun getNonExistIdForSpaceEntity(spaceRepository: SpaceRepository): Long = spaceRepository.findAll().maxOf { it.id!! } + 1
 
 const val DEFAULT_CONTENT_TITLE = "title"
 

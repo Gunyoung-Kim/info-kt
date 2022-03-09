@@ -50,8 +50,9 @@ class SpaceServiceImpl(
         spaceRepository.existsById(id)
 
     @Transactional
-    override fun addContent(spaceEntity: SpaceEntity, contentEntity: ContentEntity) = spaceEntity.let {
-        contentEntity.spaceEntity = it.checkNumOfContent()
+    override fun addContent(spaceEntity: SpaceEntity, contentEntity: ContentEntity) {
+        contentEntity.spaceEntity = spaceEntity.checkNumOfContent()
+        contentService.save(contentEntity)
     }
 
     private fun SpaceEntity.checkNumOfContent() : SpaceEntity = apply {
