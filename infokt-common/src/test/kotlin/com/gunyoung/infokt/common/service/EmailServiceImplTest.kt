@@ -20,8 +20,10 @@ class EmailServiceImplUnitTest {
 
     @Mock
     lateinit var mailSender: JavaMailSender
+
     @Mock
     lateinit var log: Logger
+
     @InjectMocks
     lateinit var emailService: EmailServiceImpl
 
@@ -42,7 +44,8 @@ class EmailServiceImplUnitTest {
     fun `EmailDto 에 담긴 정보를 통해 Email 을 전송할 때 MimeMessage 생성 과정에서 예외가 발생한다`() {
         // given
         val mimeMessage = mock(MimeMessage::class.java)
-        doThrow(MessagingException::class.java).`when`(mimeMessage).setSubject(emailDto.subject, "utf-8")
+        doThrow(MessagingException::class.java).`when`(mimeMessage)
+            .setSubject(emailDto.subject, EmailServiceImpl.CHAR_SET_FOR_MESSAGE)
         given(mailSender.createMimeMessage()).willReturn(mimeMessage)
 
         // when
