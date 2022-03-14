@@ -1,6 +1,7 @@
 package com.gunyoung.infokt.common.util
 
 import com.gunyoung.infokt.common.model.*
+import com.gunyoung.infokt.common.repository.ContentRepository
 import com.gunyoung.infokt.common.repository.SpaceRepository
 import com.gunyoung.infokt.common.repository.UserRepository
 import org.mockito.Mockito
@@ -52,6 +53,8 @@ fun createSampleContentEntity(title: String): ContentEntity =
         contributors = "contributors",
         contents = "contents"
     )
+
+fun getNonExistIdForContentEntity(contentRepository: ContentRepository): Long = contentRepository.findAll().maxOf { it.id!! } + 1
 
 fun createSampleLinkEntity(): LinkEntity =
     LinkEntity(

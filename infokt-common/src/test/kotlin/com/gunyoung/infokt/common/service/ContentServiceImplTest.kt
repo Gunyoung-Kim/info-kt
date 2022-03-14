@@ -1,9 +1,14 @@
 package com.gunyoung.infokt.common.service
 
+import com.gunyoung.infokt.common.TestConfig
 import com.gunyoung.infokt.common.model.ContentEntity
 import com.gunyoung.infokt.common.model.ContentNotFoundException
 import com.gunyoung.infokt.common.repository.ContentRepository
+import com.gunyoung.infokt.common.repository.LinkRepository
 import com.gunyoung.infokt.common.util.createSampleContentEntity
+import com.gunyoung.infokt.common.util.createSampleLinkEntity
+import com.gunyoung.infokt.common.util.getNonExistIdForContentEntity
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -13,6 +18,9 @@ import org.mockito.BDDMockito.*
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.context.annotation.Import
 import java.util.*
 
 @ExtendWith(MockitoExtension::class)
@@ -250,5 +258,89 @@ class ContentServiceImplUnitTest {
 
         // then
         assertTrue(result)
+    }
+}
+
+@SpringBootTest
+@Import(TestConfig::class)
+class ContentServiceImplTest {
+
+    @Autowired
+    lateinit var contentRepository: ContentRepository
+
+    @Autowired
+    lateinit var linkService: LinkService
+
+    @Autowired
+    lateinit var linkRepository: LinkRepository
+
+    @Autowired
+    lateinit var contentService: ContentServiceImpl
+
+    lateinit var content: ContentEntity
+
+    @BeforeEach
+    fun setUp() {
+        content = createSampleContentEntity()
+        contentRepository.save(content)
+    }
+
+    @AfterEach
+    fun tearDown() {
+        linkRepository.deleteAll()
+        contentRepository.deleteAll()
+    }
+
+    @Test
+    fun `ID 로 Content 를 찾을 때 존재하지 않으면 ContentNotFoundException 을 던진다`() {
+        // given
+        val nonExistId = getNonExistIdForContentEntity(contentRepository)
+
+        // when, then
+        assertThrows<ContentNotFoundException> {
+            contentService.findById(nonExistId)
+        }
+    }
+
+    @Test
+    fun `ID 로 Content 를 찾는다`() {
+        // given
+        val contentId = content.id!!
+
+        // when
+        val result = contentService.findById(contentId)
+
+        // then
+        assertEquals(contentId, result.id)
+    }
+
+    @Test
+    fun `Content 를 삭제한다`() {
+        // given
+        val contentId = content.id!!
+        val linkId = createLinkForContent(content)
+
+        // when
+        contentService.delete(content)
+
+        // then
+        assertFalse(contentRepository.existsById(contentId))
+        assertFalse(linkRepository.existsById(linkId))
+    }
+
+    private fun createLinkForContent(content: ContentEntity): Long = createSampleLinkEntity().let {
+        it.contentEntity = content
+        linkRepository.save(it).id!!
+    }
+
+    @Test
+    fun `ID 로 Content 를 찾아 삭제할때 존재하지 않으면 CotnentNotFoundException 을 던진다`() {
+        // given
+        val nonExistId = getNonExistIdForContentEntity(contentRepository)
+
+        // when, then
+        assertThrows<ContentNotFoundException> {
+            contentService.deleteById(nonExistId)
+        }
     }
 }
