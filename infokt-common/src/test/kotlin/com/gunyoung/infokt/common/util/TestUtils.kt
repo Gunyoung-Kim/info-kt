@@ -2,6 +2,7 @@ package com.gunyoung.infokt.common.util
 
 import com.gunyoung.infokt.common.model.*
 import com.gunyoung.infokt.common.repository.ContentRepository
+import com.gunyoung.infokt.common.repository.LinkRepository
 import com.gunyoung.infokt.common.repository.SpaceRepository
 import com.gunyoung.infokt.common.repository.UserRepository
 import org.mockito.Mockito
@@ -74,5 +75,7 @@ fun createSampleLinkUpdateDto(linkId: Long): LinkUpdateDto =
         linkTag = "updateLink",
         linkURL = "https://update.com"
     )
+
+fun getNonExistIdForLinkEntity(linkRepository: LinkRepository): Long = linkRepository.findAll().maxOf { it.id!! } + 1
 
 inline fun <reified T> any(type: Class<T>): T = Mockito.any(type)

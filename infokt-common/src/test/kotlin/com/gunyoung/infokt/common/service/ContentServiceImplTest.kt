@@ -334,7 +334,7 @@ class ContentServiceImplTest {
     }
 
     @Test
-    fun `ID 로 Content 를 찾아 삭제할때 존재하지 않으면 CotnentNotFoundException 을 던진다`() {
+    fun `ID 로 Content 를 찾아 삭제할때 존재하지 않으면 ContentNotFoundException 을 던진다`() {
         // given
         val nonExistId = getNonExistIdForContentEntity(contentRepository)
 
