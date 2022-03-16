@@ -7,7 +7,10 @@ import org.springframework.context.annotation.Import
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing
 
 @Configuration
-@Import(ScanConfigs::class)
+@Import(
+    ScanConfigs::class,
+    SecurityConfig::class
+)
 @EnableJpaAuditing
 class CommonConfig {
 }

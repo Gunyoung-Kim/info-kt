@@ -12,6 +12,7 @@ import org.aspectj.lang.annotation.AfterReturning
 import org.aspectj.lang.annotation.Aspect
 import org.aspectj.lang.annotation.Before
 import org.aspectj.lang.annotation.Pointcut
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.stereotype.Component
 import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
@@ -34,9 +35,7 @@ class UserRestController(
         @ModelAttribute("formModel") @Valid userJoinDto: UserJoinDto
     ): Unit = userService.createNewUser(userJoinDto).notReturn()
 
-    /**
-     * todo: PreAuthroize 로 나인지 확인
-     */
+    @PreAuthorize("@userSecurityService.checkIsMineByEmail(#targetUserEmail)")
     @DeleteMapping("/users")
     fun deleteUser(
         @RequestParam("email") targetUserEmail: String

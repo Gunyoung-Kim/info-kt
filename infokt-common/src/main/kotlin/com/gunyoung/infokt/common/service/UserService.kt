@@ -129,6 +129,5 @@ class UserServiceImpl(
 
     override fun countWithNameKeyword(keyword: String): Long =
         userRepository.countWithNameKeyword(keyword)
-
-
 }
+
