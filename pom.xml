@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>com.gunyoung.common</groupId>
 		<artifactId>gvc4j</artifactId>
-		<version>0.0.4</version>
+		<version>0.0.5</version>
 	</parent>
 
 	<groupId>com.gunyoung</groupId>
@@ -48,7 +48,6 @@
 				<groupId>com.h2database</groupId>
 				<artifactId>h2</artifactId>
 				<version>${h2database.version}</version>
-				<scope>test</scope>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
