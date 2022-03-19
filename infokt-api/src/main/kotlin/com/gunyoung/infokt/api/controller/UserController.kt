@@ -39,7 +39,7 @@ class UserRestController(
     @DeleteMapping("/users")
     fun deleteUser(
         @RequestParam("email") targetUserEmail: String
-    ) = userService.deleteByEmail(targetUserEmail)
+    ): Unit = userService.deleteByEmail(targetUserEmail)
 }
 
 @Component
@@ -49,7 +49,7 @@ class UserRestControllerAspect(
     val emailService: EmailService
 ) {
 
-    @Pointcut("execution(* com.gunyoung.infokt.api.controller.UserRestController.join(..)")
+    @Pointcut("execution(* com.gunyoung.infokt.api.controller.UserRestController.join(..))")
     private fun userRestControllerJoinMethod() {
     }
 

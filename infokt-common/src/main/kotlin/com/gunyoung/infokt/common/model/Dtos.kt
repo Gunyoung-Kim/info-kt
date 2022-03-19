@@ -12,16 +12,16 @@ data class ErrorMsg(
 // User
 
 data class UserJoinDto(
-    @NotEmpty
-    @Size(max = 50)
+    @field:NotEmpty
+    @field:Size(max = 50)
     val email: String,
-    @NotEmpty
+    @field:NotEmpty
     val password: String,
-    @NotEmpty
-    @Size(max = 60)
+    @field:NotEmpty
+    @field:Size(max = 60)
     val firstName: String,
-    @NotEmpty
-    @Size(max = 60)
+    @field:NotEmpty
+    @field:Size(max = 60)
     val lastName: String
 )
 

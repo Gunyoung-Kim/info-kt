@@ -19,7 +19,7 @@ class LogAspect(
     }
 
     @Around("controllerLogPointcut()")
-    fun loggingAroundController(joinPoint: ProceedingJoinPoint): Any {
+    fun loggingAroundController(joinPoint: ProceedingJoinPoint): Any? {
         val request = (RequestContextHolder.currentRequestAttributes() as ServletRequestAttributes).request
         val params = request.getStringOfParameters()
         val requestIp = request.getRequestIp()
