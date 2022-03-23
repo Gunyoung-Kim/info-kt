@@ -2,10 +2,7 @@ package com.gunyoung.infokt.common.service
 
 import com.gunyoung.infokt.common.code.ContentErrorCode
 import com.gunyoung.infokt.common.code.SpaceErrorCode
-import com.gunyoung.infokt.common.model.ContentEntity
-import com.gunyoung.infokt.common.model.ContentNumLimitExceedException
-import com.gunyoung.infokt.common.model.SpaceEntity
-import com.gunyoung.infokt.common.model.SpaceNotFoundException
+import com.gunyoung.infokt.common.model.*
 import com.gunyoung.infokt.common.repository.SpaceRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -18,13 +15,14 @@ interface SpaceService {
 
     fun existsById(id: Long): Boolean
 
-    fun addContentByUserId(userId: Long, contentEntity: ContentEntity)
+    fun addContentByUserId(userId: Long, contentDto: ContentDto): ContentEntity
 }
 
 @Service
 class SpaceServiceImpl(
     val spaceRepository: SpaceRepository,
-    val contentService: ContentService
+    val contentService: ContentService,
+    val contentMapper: ContentMapper
 ) : SpaceService {
 
     companion object {
@@ -50,12 +48,15 @@ class SpaceServiceImpl(
         spaceRepository.existsById(id)
 
     @Transactional
-    override fun addContentByUserId(userId: Long, contentEntity: ContentEntity) {
+    override fun addContentByUserId(userId: Long, contentDto: ContentDto) =
+        contentMapper.contentDtoToEntity(contentDto)
+            .findSpaceByUserIdAndAddToIt(userId)
+
+    private fun ContentEntity.findSpaceByUserIdAndAddToIt(userId: Long): ContentEntity =
         spaceRepository.findByUserIdWithContentEntities(userId)?.let {
-            contentEntity.spaceEntity = it.checkNumOfContent()
-            contentService.save(contentEntity)
+            spaceEntity = it.checkNumOfContent()
+            contentService.save(this)
         } ?: throw SpaceNotFoundException(SpaceErrorCode.SPACE_NOT_FOUND_ERROR.description)
-    }
 
     private fun SpaceEntity.checkNumOfContent() : SpaceEntity = apply {
         if (contentEntities.size >= MAX_CONTENT_NUM_PER_SPACE) {

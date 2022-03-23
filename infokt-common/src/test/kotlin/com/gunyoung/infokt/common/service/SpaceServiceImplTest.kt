@@ -1,16 +1,14 @@
 package com.gunyoung.infokt.common.service
 
 import com.gunyoung.infokt.common.TestConfig
+import com.gunyoung.infokt.common.model.ContentMapper
 import com.gunyoung.infokt.common.model.ContentNumLimitExceedException
 import com.gunyoung.infokt.common.model.SpaceEntity
 import com.gunyoung.infokt.common.model.SpaceNotFoundException
 import com.gunyoung.infokt.common.repository.ContentRepository
 import com.gunyoung.infokt.common.repository.SpaceRepository
 import com.gunyoung.infokt.common.repository.UserRepository
-import com.gunyoung.infokt.common.util.createSampleContentEntity
-import com.gunyoung.infokt.common.util.createSampleSpaceEntity
-import com.gunyoung.infokt.common.util.createSampleUserEntity
-import com.gunyoung.infokt.common.util.getNonExistIdForSpaceEntity
+import com.gunyoung.infokt.common.util.*
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
@@ -18,6 +16,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.*
+import org.mockito.BDDMockito.any
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
@@ -31,8 +30,13 @@ class SpaceServiceImplUnitTest {
 
     @Mock
     lateinit var spaceRepository: SpaceRepository
+
     @Mock
     lateinit var contentService: ContentService
+
+    @Mock
+    lateinit var contentMapper: ContentMapper
+
     @InjectMocks
     lateinit var spaceService: SpaceServiceImpl
 
@@ -145,12 +149,14 @@ class SpaceServiceImplUnitTest {
     fun `Space에 Content 추가할때 Content의 Space 에 등록이 되어있는지 확인한다`() {
         // given
         val userId = 1L
+        val contentDto = createSampleContentDto()
         val contentEntity = createSampleContentEntity()
 
+        given(contentMapper.contentDtoToEntity(contentDto)).willReturn(contentEntity)
         given(spaceRepository.findByUserIdWithContentEntities(userId)).willReturn(space)
 
         // when
-        spaceService.addContentByUserId(userId, contentEntity)
+        spaceService.addContentByUserId(userId, contentDto)
 
         // then
         assertEquals(space, contentEntity.spaceEntity)
@@ -163,12 +169,16 @@ class SpaceServiceImplTest {
 
     @Autowired
     lateinit var spaceRepository: SpaceRepository
+
     @Autowired
     lateinit var contentService: ContentService
+
     @Autowired
     lateinit var contentRepository: ContentRepository
+
     @Autowired
     lateinit var userRepository: UserRepository
+
     @Autowired
     lateinit var spaceService: SpaceService
 
@@ -254,7 +264,7 @@ class SpaceServiceImplTest {
 
         // when, then
         assertThrows<ContentNumLimitExceedException> {
-            spaceService.addContentByUserId(userId, createSampleContentEntity())
+            spaceService.addContentByUserId(userId, createSampleContentDto())
         }
 
         assertEquals(beforeNumOfContent, contentRepository.count())
@@ -273,12 +283,12 @@ class SpaceServiceImplTest {
     fun `Space 에 User ID 로 찾아 Content 를 추가한다`() {
         // given
         val userId = setUserForSpaceAndGetUserId(createSampleSpaceEntity())
-        val newContentForSpace = createSampleContentEntity()
+        val contentDto = createSampleContentDto()
 
         val beforeNumOfContent = contentRepository.count()
 
         // when
-        spaceService.addContentByUserId(userId, newContentForSpace)
+        spaceService.addContentByUserId(userId, contentDto)
 
         // then
         assertEquals(beforeNumOfContent + 1, contentRepository.count())

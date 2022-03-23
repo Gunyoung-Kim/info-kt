@@ -1,5 +1,6 @@
 package com.gunyoung.infokt.common.model
 
+import org.springframework.format.annotation.DateTimeFormat
 import java.util.*
 import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.Size
@@ -35,11 +36,15 @@ data class SimpleUserInfoDto(
 
 data class ContentDto(
     val hostId: Long,
+    @field:NotEmpty
     val title: String,
     val description: String,
+    @field:NotEmpty
     val contributors: String,
     val skillStacks: String,
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     val startedAt: Date,
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     val endAt: Date,
     val contents: String,
     val links: List<LinkUpdateDto> = emptyList()

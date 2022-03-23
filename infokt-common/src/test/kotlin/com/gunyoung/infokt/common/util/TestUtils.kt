@@ -6,6 +6,7 @@ import com.gunyoung.infokt.common.repository.LinkRepository
 import com.gunyoung.infokt.common.repository.SpaceRepository
 import com.gunyoung.infokt.common.repository.UserRepository
 import org.mockito.Mockito
+import java.util.*
 
 const val DEFAULT_USER_EMAIL = "test@test.com"
 
@@ -56,6 +57,21 @@ fun createSampleContentEntity(title: String): ContentEntity =
     )
 
 fun getNonExistIdForContentEntity(contentRepository: ContentRepository): Long = contentRepository.findAll().maxOf { it.id!! } + 1
+
+fun createSampleContentDto(): ContentDto = createSampleContentDto("title")
+
+fun createSampleContentDto(title: String): ContentDto =
+    ContentDto(
+        hostId = 1L,
+        title = title,
+        description = "description",
+        contributors = "contributors",
+        skillStacks = "skillStacks",
+        startedAt = Date(1999, 1, 16),
+        endAt = Date(1999, 1, 16),
+        contents = "contents",
+        links = emptyList(),
+    )
 
 fun createSampleLinkEntity(): LinkEntity =
     LinkEntity(

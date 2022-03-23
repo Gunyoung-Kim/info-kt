@@ -15,6 +15,9 @@ class MapperBeanConfig {
 
     @Bean
     fun linkMapper() : LinkMapper = Mappers.getMapper(LinkMapper::class.java)
+
+    @Bean
+    fun contentMapper() : ContentMapper = Mappers.getMapper(ContentMapper::class.java)
 }
 
 @Mapper
@@ -44,4 +47,12 @@ interface LinkMapper {
         Mapping(target = "url", source = "linkUpdateDto.linkURL")
     )
     fun updateEntityFromLinkUpdateDto(@MappingTarget linkEntity: LinkEntity, linkUpdateDto: LinkUpdateDto)
+}
+
+@Mapper
+interface ContentMapper {
+
+    fun contentDtoToEntity(contentDto: ContentDto): ContentEntity
+
+    // todo - linkUpdarteDtos 처리
 }
