@@ -54,5 +54,9 @@ interface ContentMapper {
 
     fun contentDtoToEntity(contentDto: ContentDto): ContentEntity
 
-    // todo - linkUpdarteDtos 처리
+    @Mappings(
+        Mapping(target = "tag", source = "linkUpdateDto.linkTag"),
+        Mapping(target = "url", source = "linkUpdateDto.linkURL")
+    )
+    fun linkUpdateDtoToEntity(linkUpdateDto: LinkUpdateDto): LinkEntity
 }

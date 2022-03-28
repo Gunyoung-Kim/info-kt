@@ -104,7 +104,12 @@ class ContentRestControllerTest: ControllerTest() {
         LinkedMultiValueMap<String, String>().apply {
             add("hostId", hostId.toString())
             add("title", title)
-            // todo - 나머지 필드 채우기
+            add("description", "description")
+            add("contributors", "gallix.kim")
+            add("skillStacks", "kotlin")
+            add("startedAt", "1999-01-16")
+            add("endAt", "1999-01-16")
+            add("contents", "contents")
         }
 
     private fun createSampleContentDtoParams(hostId: Long) =
